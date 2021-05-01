@@ -7,11 +7,12 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-   <EditText
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:hint="Enter Phone No:"
-       android:id="@+id/phoneNUmber"/>
+    <EditText
+        android:id="@+id/phoneNUmber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter Phone No:"
+        android:inputType="phone" />
 
     <EditText
         android:layout_width="wrap_content"
