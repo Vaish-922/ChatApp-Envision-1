@@ -1,10 +1,11 @@
-package com.example.whatsapp_clone;
+package com.example.chatapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(verificationId, forceResendingToken);
+               // System.out.println("Fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
                 mVerificationId = verificationId;
                 verify.setText("Verify code");
 
@@ -98,24 +100,40 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+                   String userId = user.getUid();
+                    System.out.println(userId);
                    if(user!=null){
-                       final DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
-                       mUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
-                           @Override
-                           public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(!snapshot.exists()){
-                                        Map<String, Object> userMap = new HashMap<>();
-                                        userMap.put("phone",user.getPhoneNumber());
-                                        userMap.put("name",user.getPhoneNumber());
-                                        mUserDB.updateChildren(userMap);
-                                    }
-                               userIsLoggedIn();
-                           }
+                     try {
+                         final DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("user").child(userId);
+                         //final DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapp-c1496-default-rtdb.firebaseio.com/");
+                         //final DatabaseReference child1 = mUserDB.child("user");
 
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError error) { }
-                       });
+                         //System.out.println("Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+                         //System.out.println(mUserDB);
+
+
+                         mUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                             @Override
+                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                 if (!dataSnapshot.exists()) {
+                                     //System.out.println("****************************************************************************");
+                                     Map<String, Object> userMap = new HashMap<>();
+                                     userMap.put("phone", user.getPhoneNumber());
+                                     userMap.put("name", user.getPhoneNumber());
+                                     mUserDB.updateChildren(userMap);
+                                 }
+
+                             }
+
+                             @Override
+                             public void onCancelled(@NonNull DatabaseError error) {
+                             }
+                         });
+                     }
+                     catch (Exception e) {
+                         System.out.println(e);
+                     }
+                     userIsLoggedIn();
 
                    }
                 }

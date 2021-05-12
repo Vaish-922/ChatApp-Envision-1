@@ -1,11 +1,16 @@
-package com.example.whatsapp_clone;
+package com.example.chatapp.user;
 
 public class UserObject {
 
-    private String name, phone;
-    public UserObject(String name,String phone){
+    private String name, uid, phone;
+    public UserObject(String uid,String name,String phone){
         this.name = name;
         this.phone = phone;
+        this.uid=uid;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public void setName(String name) {

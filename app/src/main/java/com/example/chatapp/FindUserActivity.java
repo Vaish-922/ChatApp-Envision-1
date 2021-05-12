@@ -1,4 +1,4 @@
-package com.example.whatsapp_clone;
+package com.example.chatapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,8 +9,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
-import android.widget.LinearLayout;
 
+import com.example.chatapp.user.UserListAdapter;
+import com.example.chatapp.user.UserObject;
+import com.example.chatapp.util.CountryToPhonePrefix;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +29,8 @@ public class FindUserActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mUserListLayoutManager;
 
     ArrayList<UserObject> userList,contactList;
+
+
 
 
     @Override
@@ -54,7 +58,7 @@ public class FindUserActivity extends AppCompatActivity {
             if(!String.valueOf(phone.charAt(0)).equals("+"))
                 phone = ISOPrefix + phone;
 
-            UserObject mContact = new UserObject(name, phone);
+            UserObject mContact = new UserObject("", name, phone);
             contactList.add(mContact);
             getUserDetails(mContact);
         }
@@ -74,7 +78,8 @@ public class FindUserActivity extends AppCompatActivity {
                            phone = childSnapshot.child("phone").getValue().toString();
                        if(childSnapshot.child("name").getValue()!= null)
                            name = childSnapshot.child("name").getValue().toString();
-                       UserObject mUser = new UserObject(name, phone);
+
+                       UserObject mUser = new UserObject(childSnapshot.getKey(),name, phone);
                        if(name.equals(phone))
                            for(UserObject mContactIterator: contactList){
                                if(mContactIterator.getPhone().equals(mUser.getPhone())){

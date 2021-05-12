@@ -1,4 +1,4 @@
-package com.example.whatsapp_clone;
+package com.example.chatapp;
 
 import org.junit.Test;
 
