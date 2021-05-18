@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.ChatActivity;
+import com.example.chatapp.MainPageActivity;
 import com.example.chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,6 +52,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
                 bundle.putString("chatID", chatList.get(holder.getAdapterPosition()).getChatId());
                 intent.putExtras(bundle);
                 v.getContext().startActivity(intent);
+
+                //Toast.makeText(v.getContext(), "Chat has been created. Please go back to main page to access it.", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -71,6 +76,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             mTitle = view.findViewById(R.id.title);
 
             mLayout=view.findViewById(R.id.layout);
+
         }
 
     }

@@ -1,14 +1,18 @@
 package com.example.chatapp.user;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chatapp.ChatActivity;
 import com.example.chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -46,6 +50,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
                 FirebaseDatabase.getInstance().getReference().child("user").child(FirebaseAuth.getInstance().getUid()).child("chat").child(key).setValue(true);
                 FirebaseDatabase.getInstance().getReference().child("user").child(userList.get(position).getUid()).child("chat").child(key).setValue(true);
+
+                Toast.makeText(v.getContext(), "A new chat has been created", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatID", key);
+                intent.putExtras(bundle);
+                v.getContext().startActivity(intent);
 
             }
         });
