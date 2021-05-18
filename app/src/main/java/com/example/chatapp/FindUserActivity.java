@@ -21,6 +21,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FindUserActivity extends AppCompatActivity {
 
@@ -80,12 +82,20 @@ public class FindUserActivity extends AppCompatActivity {
                            name = childSnapshot.child("name").getValue().toString();
 
                        UserObject mUser = new UserObject(childSnapshot.getKey(),name, phone);
-                       if(name.equals(phone))
+
                            for(UserObject mContactIterator: contactList){
                                if(mContactIterator.getPhone().equals(mUser.getPhone())){
                                    mUser.setName(mContactIterator.getName());
                                }
                            }
+                       Map<String, Object> userMap = new HashMap<>();
+                       userMap.put("phone", mUser.getPhone());
+                       userMap.put("name", mUser.getName());
+                       DatabaseReference mUserUpdate = mUserDB.child(mUser.getUid());
+                       System.out.println(mUserUpdate);
+
+                           mUserUpdate.updateChildren((userMap));
+
 
 
                        userList.add(mUser);
