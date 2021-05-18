@@ -18,16 +18,21 @@ import android.widget.EditText;
 import com.example.chatapp.Chat.MediaAdapter;
 import com.example.chatapp.Chat.MessageAdapter;
 import com.example.chatapp.Chat.MessageObject;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +59,6 @@ public class ChatActivity extends AppCompatActivity {
 
        // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, getIntent(), PendingIntent.FLAG_CANCEL_CURRENT);
         chatID = getIntent().getExtras().getString("chatID");
-        System.out.println(chatID);
 
         mChatDb = FirebaseDatabase.getInstance().getReference().child("chat").child(chatID);
 
@@ -79,14 +83,23 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull @org.jetbrains.annotations.NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 if(snapshot.exists()){
                     String  text = " ",
-                            creatorID = " ";
+                            creatorID = " ",
+                    senderName = " ";
+
+                    ArrayList<String> mediaUrlList = new ArrayList<>();
 
                     if(snapshot.child("text").getValue() != null)
                         text = snapshot.child("text").getValue().toString();
                     if(snapshot.child("creator").getValue() != null)
                         creatorID = snapshot.child("creator").getValue().toString();
+                    if(snapshot.child("sender").getValue() != null)
+                        senderName = snapshot.child("sender").getValue().toString();
+                    if(snapshot.child("media").getChildrenCount() >0)
+                        for(DataSnapshot mediaSnapshots : snapshot.child("media").getChildren()){
+                            mediaUrlList.add(mediaSnapshots.getValue().toString());
+                        }
 
-                    MessageObject mMessage = new MessageObject(snapshot.getKey(), creatorID, text);
+                    MessageObject mMessage = new MessageObject(snapshot.getKey(), creatorID, text,senderName,mediaUrlList );
                     messageList.add(mMessage);
                     mChatLayoutManager.scrollToPosition(messageList.size()-1);
                     mChatAdapter.notifyDataSetChanged();
@@ -116,6 +129,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+    public String name;
 
     int totalMediaUploaded = 0;
     ArrayList<String> mediaIdList = new ArrayList<>();
@@ -124,11 +138,31 @@ public class ChatActivity extends AppCompatActivity {
         mMessage = findViewById(R.id.message);
 
         String messageId = mChatDb.push().getKey();
+
         final DatabaseReference newMessageDb = mChatDb.child(messageId);
 
         final Map newMessageMap = new HashMap<>();
+        String uId = FirebaseAuth.getInstance().getUid();
+
+
+
+
+       /* DatabaseReference mUserName = FirebaseDatabase.getInstance().getReference().child("user").child(uId).child("name");
+        mUserName.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    name=task.getResult().getValue().toString();
+                    System.out.println(name);
+            }
+        }});*/
+
+
+
 
         newMessageMap.put("creator", FirebaseAuth.getInstance().getUid());
+        newMessageMap.put("sender", name);
+        System.out.println(newMessageMap.get("sender"));
 
         if(!mMessage.getText().toString().isEmpty())
                 newMessageMap.put("text", mMessage.getText().toString());

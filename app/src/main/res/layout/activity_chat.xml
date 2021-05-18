@@ -37,14 +37,14 @@
 
 
             <Button
-                android:layout_weight="0.2"
+                android:layout_weight="0.3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="add media"
                 android:id="@+id/addMedia"/>
 
             <Button
-                android:layout_weight="0.2"
+                android:layout_weight="0.3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="send"
