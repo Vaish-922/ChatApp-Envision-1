@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,9 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.ChatActivity;
 import com.example.chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
     ArrayList<UserObject> userList;
@@ -43,26 +47,23 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         holder.mName.setText(userList.get(position).getName());
         holder.mPhone.setText(userList.get(position).getPhone());
 
-        holder.mLayout.setOnClickListener(new View.OnClickListener() {
+        holder.mAdd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                String key = FirebaseDatabase.getInstance().getReference().child("chat").push().getKey();
-
-                FirebaseDatabase.getInstance().getReference().child("user").child(FirebaseAuth.getInstance().getUid()).child("chat").child(key).setValue(true);
-                FirebaseDatabase.getInstance().getReference().child("user").child(userList.get(position).getUid()).child("chat").child(key).setValue(true);
-
-                Toast.makeText(v.getContext(), "A new chat has been created", Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("chatID", key);
-                intent.putExtras(bundle);
-                v.getContext().startActivity(intent);
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userList.get(holder.getAdapterPosition()).setSelected(isChecked);
             }
         });
 
+
     }
+
+    /*Intent intent = new Intent(v.getContext(), ChatActivity.class);
+    Bundle bundle = new Bundle();
+                bundle.putString("chatID", key);
+                intent.putExtras(bundle);
+                v.getContext().startActivity(intent);*/
+
+
 
     @Override
     public int getItemCount() {
@@ -73,11 +74,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     public class UserListViewHolder extends RecyclerView.ViewHolder{
         public TextView mName,mPhone;
         public LinearLayout mLayout;
+        public CheckBox mAdd;
         public UserListViewHolder(View view){
             super(view);
             mName = view.findViewById(R.id.name);
             mPhone = view.findViewById(R.id.phone);
             mLayout=view.findViewById(R.id.layout);
+            mAdd=view.findViewById(R.id.add);
         }
 
     }
