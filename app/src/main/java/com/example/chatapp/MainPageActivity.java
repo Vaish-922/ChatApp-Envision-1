@@ -25,6 +25,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.onesignal.OSSubscriptionObserver;
+import com.onesignal.OSSubscriptionStateChanges;
+import com.onesignal.OneSignal;
 
 import java.util.ArrayList;
 
@@ -45,6 +48,8 @@ public class MainPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_page);
 
         Fresco.initialize(this);
+
+
 
         Button mLogout = findViewById(R.id.logout);
         Button mFindUser = findViewById(R.id.findUser);
@@ -124,5 +129,6 @@ public class MainPageActivity extends AppCompatActivity {
                     Manifest.permission.READ_CONTACTS},1 );
         }
     }
+
 
 }
