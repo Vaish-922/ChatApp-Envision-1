@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FindUserActivity"
     android:orientation="vertical" >
-    <Button
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userList"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/create"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:scrollbars="vertical" />
+
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/create"
-        android:text="Create Chat Room"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/userList"
-        android:scrollbars="vertical"/>
+        android:text="Create Chat Room"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/teal_700"
+        android:drawableEnd="@mipmap/groupchat"
+        android:layout_centerHorizontal="true"/>
 
 
-</LinearLayout>
+</RelativeLayout>
